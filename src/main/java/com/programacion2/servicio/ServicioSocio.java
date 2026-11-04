@@ -119,6 +119,23 @@ public class ServicioSocio implements IServicioSocio {
     }
 
     @Override
+    public void cambiarPlan(int id, int planId) {
+        Socio socio = consultar(id);
+        Plan plan = servicioPlan.consultar(planId);
+        if (socio.getPlan() != null && socio.getPlan().getId() == plan.getId()) {
+            return;                                  // es el mismo plan: no hay nada que cambiar
+        }
+        int anotadas = repositorioActividades.consultar(Actividad.class, "porSocio", id).size();
+        if (anotadas > plan.getMaxActividades()) {
+            throw new ServicioException("Con el plan " + plan.getNombre() + " puede tener hasta "
+                    + plan.getMaxActividades() + " actividades y está anotado en " + anotadas
+                    + ". Primero sacalo de alguna.");
+        }
+        socio.setPlan(plan);
+        repositorio.guardar(socio);                  // UPDATE de PLAN_ID
+    }
+
+    @Override
     public void darDeBaja(int id) {
         Socio socio = consultar(id);
         if (!socio.isActivo()) {

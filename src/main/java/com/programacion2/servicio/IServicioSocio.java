@@ -23,6 +23,8 @@ public interface IServicioSocio {
     /** Modificación de los datos y el plan de un socio. */
     Socio modificar(int id, Socio datos, int planId);
 
+    /** Cambia el abono (plan) del socio. No deja si ya está anotado en más actividades de las que permite el plan nuevo. */
+    void cambiarPlan(int id, int planId);
     /** Baja lógica: queda inactivo y se lo saca de sus actividades. */
     void darDeBaja(int id);
 

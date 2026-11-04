@@ -88,8 +88,8 @@ public class DatosIniciales implements CommandLineRunner {
         Socio juan = servicioSocio.alta(nuevoSocio("38222333", "Juan", "Pérez", null, false, true), libre.getId());
         servicioSocio.alta(nuevoSocio("42333444", "Lucía", "Díaz", null, false, false), tres.getId());   // sin pagar
 
-        servicioPago.cobrar(ana.getId(), MedioPago.EFECTIVO);
-        servicioPago.cobrar(juan.getId(), MedioPago.TRANSFERENCIA);
+        servicioPago.cobrar(ana.getId(), dos.getId(), MedioPago.EFECTIVO);
+        servicioPago.cobrar(juan.getId(), libre.getId(), MedioPago.TRANSFERENCIA);
 
         servicioActividad.inscribir(funcional.getId(), ana.getId());
         servicioActividad.inscribir(spinning.getId(), juan.getId());

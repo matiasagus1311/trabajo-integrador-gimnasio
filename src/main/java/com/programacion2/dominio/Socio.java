@@ -78,10 +78,15 @@ public class Socio extends Persona {
      * y -20% sobre lo que queda si es empleado de comercio.
      */
     public BigDecimal calcularCuota() {
-        if (plan == null) {
+        return calcularCuota(plan);
+    }
+
+    /** Cuota que pagaría este socio con otro plan (se usa al cobrar, para elegir el abono). */
+    public BigDecimal calcularCuota(Plan otroPlan) {
+        if (otroPlan == null) {
             return BigDecimal.ZERO;
         }
-        BigDecimal cuota = plan.getPrecioMensual();
+        BigDecimal cuota = otroPlan.getPrecioMensual();
         if (grupoFamiliar) {
             cuota = cuota.subtract(cuota.multiply(DESCUENTO_GRUPO_FAMILIAR));
         }

@@ -194,6 +194,7 @@ public class SocioControlador {
             model.addAttribute("pago", pago);
             model.addAttribute("socio", pago.getSocio());
             model.addAttribute("medios", MedioPago.values());
+            model.addAttribute("planes", servicioPlan.listar());
             return "empleado/cobrar";
         } catch (ServicioException e) {
             redirect.addFlashAttribute("error", e.getMessage());
@@ -203,12 +204,13 @@ public class SocioControlador {
 
     @PostMapping("/{id}/cobrar")
     public String cobrar(@PathVariable int id,
+                         @RequestParam(defaultValue = "0") int planId,
                          @RequestParam(required = false) MedioPago medioPago,
                          RedirectAttributes redirect) {
         try {
-            Pago pago = servicioPago.cobrar(id, medioPago);
-            redirect.addFlashAttribute("exito", "Cobro registrado. Abono vigente hasta el "
-                    + Formato.fecha(pago.getHasta()) + ".");
+            Pago pago = servicioPago.cobrar(id, planId, medioPago);
+            redirect.addFlashAttribute("exito", "Cobro registrado: " + pago.getSocio().getPlan().getNombre()
+                    + ". Abono vigente hasta el " + Formato.fecha(pago.getHasta()) + ".");
             return "redirect:/empleado/socios/" + id;
         } catch (ServicioException e) {
             redirect.addFlashAttribute("error", e.getMessage());
