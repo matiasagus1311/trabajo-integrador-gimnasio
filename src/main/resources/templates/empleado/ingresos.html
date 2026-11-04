@@ -47,5 +47,17 @@
     </div>
 </div>
 <script th:replace="~{fragmentos/base :: scripts}"></script>
+<script>
+    // A los 3 segundos se borra el DNI y el cartel, así queda lista para el próximo socio.
+    const resultado = document.querySelectorAll('.alert');
+    if (resultado.length > 0) {
+        setTimeout(function () {
+            resultado.forEach(function (cartel) { cartel.remove(); });
+            const dni = document.querySelector('input[name="dni"]');
+            dni.value = '';
+            dni.focus();
+        }, 3000);
+    }
+</script>
 </body>
 </html>
