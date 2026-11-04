@@ -15,7 +15,7 @@
     <groupId>com.programacion2</groupId>
     <artifactId>gimnasio</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>GymManager</name>
+    <name>Gimnasio</name>
     <description>Trabajo integrador de Programación II: gestión de un gimnasio</description>
 
     <properties>
@@ -80,6 +80,23 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- DataNucleus lee su plugin.xml desde el .jar: hay que dejarlo descomprimido -->
+                    <requiresUnpack>
+                        <dependency>
+                            <groupId>org.datanucleus</groupId>
+                            <artifactId>datanucleus-core</artifactId>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.datanucleus</groupId>
+                            <artifactId>datanucleus-api-jdo</artifactId>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.datanucleus</groupId>
+                            <artifactId>datanucleus-rdbms</artifactId>
+                        </dependency>
+                    </requiresUnpack>
+                </configuration>
             </plugin>
 
             <!-- Enhance de DataNucleus: prepara las clases del dominio para guardarlas.

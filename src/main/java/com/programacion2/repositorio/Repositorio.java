@@ -33,6 +33,7 @@ public class Repositorio<T> implements IRepositorio<T> {
     @Override
     public void guardar(T objeto) {
         PersistenceManager pm = pmf.getPersistenceManager();
+        pm.setDetachAllOnCommit(true);   // al terminar, el objeto queda desatado CON sus datos
         Transaction tx = pm.currentTransaction();
         try {
             tx.begin();
@@ -51,6 +52,7 @@ public class Repositorio<T> implements IRepositorio<T> {
     @Override
     public void guardar(List<T> objetos) {
         PersistenceManager pm = pmf.getPersistenceManager();
+        pm.setDetachAllOnCommit(true);   // al terminar, el objeto queda desatado CON sus datos
         Transaction tx = pm.currentTransaction();
         try {
             tx.begin();
