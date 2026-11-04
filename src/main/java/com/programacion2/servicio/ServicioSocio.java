@@ -72,6 +72,24 @@ public class ServicioSocio implements IServicioSocio {
         return resultado;
     }
 
+    /**
+     * Cada palabra con la primera letra en mayúscula y el resto en minúscula:
+     * "mAtias ibañeZ" -> "Matias Ibañez", "juan  pablo" -> "Juan Pablo".
+     */
+    private static String capitalizar(String texto) {
+        StringBuilder resultado = new StringBuilder();
+        for (String palabra : texto.trim().toLowerCase().split("\\s+")) {
+            if (palabra.isEmpty()) {
+                continue;
+            }
+            if (resultado.length() > 0) {
+                resultado.append(' ');
+            }
+            resultado.append(Character.toUpperCase(palabra.charAt(0))).append(palabra.substring(1));
+        }
+        return resultado.toString();
+    }
+
     /** Pasa a minúsculas y saca las tildes: "Gómez" -> "gomez". */
     private static String normalizar(String texto) {
         if (texto == null) {
@@ -101,8 +119,8 @@ public class ServicioSocio implements IServicioSocio {
         validarDniLibre(datos.getDni(), 0);
         Plan plan = servicioPlan.consultar(planId);
 
-        Socio socio = new Socio(datos.getDni().trim(), datos.getNombre().trim(),
-                datos.getApellido().trim(), limpiar(datos.getEmail()), plan);
+        Socio socio = new Socio(datos.getDni().trim(), capitalizar(datos.getNombre()),
+                capitalizar(datos.getApellido()), limpiar(datos.getEmail()), plan);
         socio.setGrupoFamiliar(datos.isGrupoFamiliar());
         socio.setEmpleadoComercio(datos.isEmpleadoComercio());
         socio.setActivo(true);
@@ -120,8 +138,8 @@ public class ServicioSocio implements IServicioSocio {
         Plan plan = servicioPlan.consultar(planId);
 
         socio.setDni(datos.getDni().trim());
-        socio.setNombre(datos.getNombre().trim());
-        socio.setApellido(datos.getApellido().trim());
+        socio.setNombre(capitalizar(datos.getNombre()));
+        socio.setApellido(capitalizar(datos.getApellido()));
         socio.setEmail(limpiar(datos.getEmail()));
         socio.setGrupoFamiliar(datos.isGrupoFamiliar());
         socio.setEmpleadoComercio(datos.isEmpleadoComercio());
