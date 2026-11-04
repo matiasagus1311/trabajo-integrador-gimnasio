@@ -11,7 +11,6 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Query;
 
 /**
  * Socio del gimnasio.
@@ -22,11 +21,6 @@ import javax.jdo.annotations.Query;
  */
 @PersistenceCapable(detachable = "true")
 @Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
-@Query(name = "buscar", language = "JDOQL",
-       value = "SELECT FROM com.programacion2.dominio.Socio"
-             + " WHERE nombre.toLowerCase().indexOf(:valor) >= 0"
-             + " || apellido.toLowerCase().indexOf(:valor) >= 0"
-             + " || dni.indexOf(:valor) >= 0")
 public class Socio extends Persona {
 
     // Descuentos del TP del 1er cuatrimestre

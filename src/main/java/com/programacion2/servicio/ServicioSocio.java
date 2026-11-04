@@ -1,5 +1,6 @@
 package com.programacion2.servicio;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -39,17 +40,19 @@ public class ServicioSocio implements IServicioSocio {
 
     @Override
     public List<Socio> buscar(String texto, int planId, String estado) {
-        List<Socio> socios;
-        if (texto == null || texto.isBlank()) {
-            socios = repositorio.listar(Socio.class);
-        } else {
-            // Named query "buscar" de la clase Socio
-            socios = repositorio.consultar(Socio.class, "buscar", texto.trim().toLowerCase());
-        }
+        List<Socio> socios = repositorio.listar(Socio.class);
+        String buscado = normalizar(texto);
 
         String filtro = (estado == null) ? "" : estado;
         List<Socio> resultado = new ArrayList<>();
         for (Socio s : socios) {
+            // Texto: busca en nombre, apellido o DNI, sin importar mayúsculas ni tildes ("gom" encuentra "Gómez")
+            if (!buscado.isEmpty()
+                    && !normalizar(s.getNombre()).contains(buscado)
+                    && !normalizar(s.getApellido()).contains(buscado)
+                    && !s.getDni().contains(buscado)) {
+                continue;
+            }
             if (planId > 0 && (s.getPlan() == null || s.getPlan().getId() != planId)) {
                 continue;
             }
@@ -67,6 +70,16 @@ public class ServicioSocio implements IServicioSocio {
         resultado.sort(Comparator.comparing(Socio::getApellido, String.CASE_INSENSITIVE_ORDER)
                 .thenComparing(Socio::getNombre, String.CASE_INSENSITIVE_ORDER));
         return resultado;
+    }
+
+    /** Pasa a minúsculas y saca las tildes: "Gómez" -> "gomez". */
+    private static String normalizar(String texto) {
+        if (texto == null) {
+            return "";
+        }
+        String sinTildes = Normalizer.normalize(texto.trim(), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "");
+        return sinTildes.toLowerCase();
     }
 
     @Override
