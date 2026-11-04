@@ -61,9 +61,9 @@ public class DatosIniciales implements CommandLineRunner {
         System.out.println("Base vacía: cargando datos iniciales...");
 
         // Los 3 pases del TP del 1er cuatrimestre
-        Plan dos = new Plan("Dos veces por semana", new BigDecimal("24000"), 2, "Hasta 2 actividades por semana");
-        Plan tres = new Plan("Tres veces por semana", new BigDecimal("27000"), 3, "Hasta 3 actividades por semana");
-        Plan libre = new Plan("Pase libre", new BigDecimal("30000"), 7, "Hasta 7 actividades por semana");
+        Plan dos = new Plan("Dos veces por semana", new BigDecimal("54000"), 2, "Hasta 2 actividades por semana");
+        Plan tres = new Plan("Tres veces por semana", new BigDecimal("60000"), 3, "Hasta 3 actividades por semana");
+        Plan libre = new Plan("Pase libre", new BigDecimal("80000"), 7, "Hasta 7 actividades por semana");
         repositorioPlanes.guardar(List.of(dos, tres, libre));
 
         // Empleado administrador (DNI 11111111, clave admin123)

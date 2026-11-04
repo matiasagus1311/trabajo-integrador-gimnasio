@@ -21,7 +21,7 @@ Aplicación web para administrar un gimnasio: socios, planes, actividades, cobro
 | `Persona` (abstracta) | DNI, nombre, apellido, email y clave. De ella heredan `Socio` y `Empleado`. |
 | `Socio` | Tiene un `Plan`, sus pagos y los descuentos (grupo familiar 10%, empleado de comercio 20%). |
 | `Empleado` | Usuario de la recepción (legajo). |
-| `Plan` | Dos veces por semana ($24.000), tres veces ($27.000) o pase libre ($30.000). Un plan tiene muchos socios (relación 1 a N). |
+| `Plan` | Dos veces por semana ($54.000), tres veces ($60.000) o pase libre ($80.000). Un plan tiene muchos socios (relación 1 a N). |
 | `Actividad` | Día, horario y cupo. Tiene una lista de socios inscriptos (relación N a N). |
 | `Pago` | Cuota cobrada a un socio: fecha, monto, medio de pago y período que cubre. |
 | `Ingreso` | Registro de cada vez que un socio entra al gimnasio. |
