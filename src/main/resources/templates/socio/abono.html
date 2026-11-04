@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Mi abono')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navSocio}"></nav>
+<div class="container">
+    <h2 class="titulo" th:text="'Hola, ' + ${socio.nombre}">Hola</h2>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="caja">
+                <h5>Mi abono</h5>
+                <p class="mb-1"><b>Plan:</b> <span th:text="${socio.plan.nombre}"></span></p>
+                <p class="mb-1"><b>Cuota mensual:</b>
+                    <span th:text="'$ ' + ${#numbers.formatDecimal(socio.calcularCuota(), 1, 'POINT', 2, 'COMMA')}"></span></p>
+                <p class="mb-1" th:if="${socio.ultimoPago != null}"><b>Último pago:</b>
+                    <span th:text="${#temporals.format(socio.ultimoPago.fecha, 'dd/MM/yyyy')}"></span></p>
+                <p class="mb-0"><b>Vigente hasta:</b>
+                    <span th:if="${socio.venceAbono == null}" class="text-danger">todavía no pagaste</span>
+                    <span th:if="${socio.venceAbono != null}" th:classappend="${socio.abonoVigente} ? 'text-success' : 'text-danger'"
+                          th:text="${#temporals.format(socio.venceAbono, 'dd/MM/yyyy')} + (${socio.abonoVigente} ? '' : ' (vencido: acercate a la recepción)')"></span>
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="caja">
+                <h5>Mis actividades</h5>
+                <p th:if="${#lists.isEmpty(actividades)}" class="text-muted">
+                    No estás anotado en ninguna. <a th:href="@{/socio/actividades}">Anotarme</a></p>
+                <ul class="list-group" th:unless="${#lists.isEmpty(actividades)}">
+                    <li class="list-group-item" th:each="a : ${actividades}" th:text="${a.nombre} + ' - ' + ${a.horario}"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-7">
+            <div class="caja">
+                <h5>Mis pagos</h5>
+                <p th:if="${#lists.isEmpty(socio.pagos)}" class="text-muted">Todavía no hay pagos.</p>
+                <table class="table table-sm" th:unless="${#lists.isEmpty(socio.pagos)}">
+                    <thead><tr><th>Fecha</th><th>Monto</th><th>Período</th></tr></thead>
+                    <tbody>
+                    <tr th:each="p : ${socio.pagosOrdenados}">
+                        <td th:text="${#temporals.format(p.fecha, 'dd/MM/yyyy')}"></td>
+                        <td th:text="'$ ' + ${#numbers.formatDecimal(p.monto, 1, 'POINT', 2, 'COMMA')}"></td>
+                        <td th:text="${#temporals.format(p.desde, 'dd/MM')} + ' al ' + ${#temporals.format(p.hasta, 'dd/MM/yyyy')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="caja">
+                <h5>Mis últimos ingresos</h5>
+                <p th:if="${#lists.isEmpty(ingresos)}" class="text-muted">Sin ingresos registrados.</p>
+                <ul class="list-group" th:unless="${#lists.isEmpty(ingresos)}">
+                    <li class="list-group-item" th:each="i : ${ingresos}"
+                        th:text="${#temporals.format(i.fechaHora, 'dd/MM/yyyy HH:mm')}"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

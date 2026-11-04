@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Inicio')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navEmpleado}"></nav>
+<div class="container">
+    <h2 class="titulo">Inicio</h2>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="caja">
+                <p class="mb-1">Socios activos</p>
+                <h3 th:text="${sociosActivos}">0</h3>
+                <a th:href="@{/empleado/socios}">Ver socios</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="caja">
+                <p class="mb-1">Abonos vencidos o sin pagar</p>
+                <h3 class="text-danger" th:text="${abonosVencidos}">0</h3>
+                <a th:href="@{/empleado/socios(estado='vencido')}">Ver quiénes son</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="caja">
+                <p class="mb-1">Ingresos de hoy</p>
+                <h3 th:text="${#lists.size(ingresosHoy)}">0</h3>
+                <a th:href="@{/empleado/ingresos}">Registrar ingreso</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="caja">
+        <h5 th:text="'Actividades de hoy (' + ${hoy.texto} + ')'">Actividades de hoy</h5>
+        <p th:if="${#lists.isEmpty(actividadesHoy)}" class="text-muted">Hoy no hay actividades.</p>
+        <ul class="list-group" th:unless="${#lists.isEmpty(actividadesHoy)}">
+            <li class="list-group-item" th:each="a : ${actividadesHoy}">
+                <a th:href="@{/empleado/actividades/{id}(id=${a.id})}" th:text="${a.nombre}">Actividad</a>
+                <span th:text="' - ' + ${a.horaInicio} + ' a ' + ${a.horaFin}"></span>
+                <span class="float-end" th:text="${#lists.size(a.inscriptos)} + ' / ' + ${a.cupo} + ' inscriptos'"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

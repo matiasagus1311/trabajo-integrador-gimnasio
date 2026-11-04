@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Planes')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navEmpleado}"></nav>
+<div class="container">
+    <h2 class="titulo">Planes</h2>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+    <div class="caja">
+        <table class="table table-striped">
+            <thead><tr><th>Plan</th><th>Precio mensual</th><th>Actividades</th><th>Socios activos</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="p : ${planes}">
+                <td th:text="${p.nombre}"></td>
+                <td th:text="'$ ' + ${#numbers.formatDecimal(p.precioMensual, 1, 'POINT', 2, 'COMMA')}"></td>
+                <td th:text="'Hasta ' + ${p.maxActividades}"></td>
+                <td th:text="${#lists.size(p.sociosActivos)}"></td>
+                <td class="text-end"><a class="btn btn-sm btn-outline-primary" th:href="@{/empleado/planes/{id}(id=${p.id})}">Ver socios</a></td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="text-muted mb-0"><small>Descuentos: 10% grupo familiar y 20% empleados de comercio.</small></p>
+    </div>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

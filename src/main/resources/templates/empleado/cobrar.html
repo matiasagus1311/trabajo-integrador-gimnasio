@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Cobrar')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navEmpleado}"></nav>
+<div class="container">
+    <h2 class="titulo">Cobrar cuota</h2>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <div class="caja col-md-6">
+        <p class="mb-1"><b>Socio:</b> <span th:text="${socio.nombreCompleto} + ' (DNI ' + ${socio.dni} + ')'"></span></p>
+        <p class="mb-1"><b>Plan:</b> <span th:text="${socio.plan.nombre}"></span></p>
+        <p class="mb-1"><b>Monto:</b>
+            <span th:text="'$ ' + ${#numbers.formatDecimal(pago.monto, 1, 'POINT', 2, 'COMMA')}"></span></p>
+        <p class="mb-3"><b>Cubre:</b>
+            <span th:text="'del ' + ${#temporals.format(pago.desde, 'dd/MM/yyyy')} + ' al ' + ${#temporals.format(pago.hasta, 'dd/MM/yyyy')}"></span></p>
+
+        <form method="post" th:action="@{/empleado/socios/{id}/cobrar(id=${socio.id})}">
+            <label class="form-label">Medio de pago</label>
+            <select class="form-select mb-3" name="medioPago" required>
+                <option value="">Elegí cómo paga</option>
+                <option th:each="m : ${medios}" th:value="${m}" th:text="${m.texto}">Efectivo</option>
+            </select>
+            <button type="submit" class="btn btn-success">Confirmar cobro</button>
+            <a class="btn btn-secondary" th:href="@{/empleado/socios/{id}(id=${socio.id})}">Cancelar</a>
+        </form>
+    </div>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

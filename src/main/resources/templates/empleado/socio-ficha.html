@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Ficha del socio')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navEmpleado}"></nav>
+<div class="container">
+    <h2 class="titulo" th:text="${socio.nombreCompleto}">Socio</h2>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <div class="row">
+        <!-- Datos y abono -->
+        <div class="col-md-6">
+            <div class="caja">
+                <h5>Datos</h5>
+                <p class="mb-1"><b>DNI:</b> <span th:text="${socio.dni}"></span></p>
+                <p class="mb-1"><b>Email:</b> <span th:text="${socio.email} ?: '-'"></span></p>
+                <p class="mb-1"><b>Socio desde:</b> <span th:text="${#temporals.format(socio.fechaAlta, 'dd/MM/yyyy')}"></span></p>
+                <p class="mb-1"><b>Estado:</b>
+                    <span th:if="${socio.activo}" class="badge bg-success">Activo</span>
+                    <span th:unless="${socio.activo}" class="badge bg-secondary">Dado de baja</span>
+                </p>
+                <div class="mt-3">
+                    <a class="btn btn-outline-secondary btn-sm" th:href="@{/empleado/socios/{id}/editar(id=${socio.id})}">Editar</a>
+                    <form th:if="${socio.activo}" class="d-inline" method="post"
+                          th:action="@{/empleado/socios/{id}/baja(id=${socio.id})}">
+                        <button type="submit" class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('¿Dar de baja al socio? Se lo va a quitar de sus actividades.')">Dar de baja</button>
+                    </form>
+                    <form th:unless="${socio.activo}" class="d-inline" method="post"
+                          th:action="@{/empleado/socios/{id}/reactivar(id=${socio.id})}">
+                        <button type="submit" class="btn btn-outline-success btn-sm">Reactivar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="caja">
+                <h5>Abono</h5>
+                <p class="mb-1"><b>Plan:</b>
+                    <a th:href="@{/empleado/planes/{id}(id=${socio.plan.id})}" th:text="${socio.plan.nombre}">Plan</a></p>
+                <p class="mb-1"><b>Cuota:</b>
+                    <span th:text="'$ ' + ${#numbers.formatDecimal(socio.calcularCuota(), 1, 'POINT', 2, 'COMMA')}"></span>
+                    <small class="text-muted" th:if="${socio.grupoFamiliar}">(grupo familiar)</small>
+                    <small class="text-muted" th:if="${socio.empleadoComercio}">(empleado de comercio)</small>
+                </p>
+                <p class="mb-1"><b>Vigente hasta:</b>
+                    <span th:if="${socio.venceAbono == null}" class="text-danger">Nunca pagó</span>
+                    <span th:if="${socio.venceAbono != null}" th:classappend="${socio.abonoVigente} ? 'text-success' : 'text-danger'"
+                          th:text="${#temporals.format(socio.venceAbono, 'dd/MM/yyyy')} + (${socio.abonoVigente} ? '' : ' (vencido)')"></span>
+                </p>
+                <a th:if="${socio.activo}" class="btn btn-success btn-sm mt-3"
+                   th:href="@{/empleado/socios/{id}/cobrar(id=${socio.id})}">Cobrar cuota</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actividades -->
+    <div class="caja">
+        <h5>Actividades</h5>
+        <p th:if="${#lists.isEmpty(actividades)}" class="text-muted">No está anotado en ninguna actividad.</p>
+        <ul class="list-group mb-3" th:unless="${#lists.isEmpty(actividades)}">
+            <li class="list-group-item d-flex justify-content-between align-items-center" th:each="a : ${actividades}">
+                <span><a th:href="@{/empleado/actividades/{id}(id=${a.id})}" th:text="${a.nombre}"></a>
+                    <span th:text="' - ' + ${a.horario}"></span></span>
+                <form method="post" th:action="@{/empleado/socios/{id}/desinscribir(id=${socio.id})}">
+                    <input type="hidden" name="actividadId" th:value="${a.id}">
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Quitar</button>
+                </form>
+            </li>
+        </ul>
+        <form th:if="${socio.activo}" class="row g-2" method="post"
+              th:action="@{/empleado/socios/{id}/inscribir(id=${socio.id})}">
+            <div class="col-md-8">
+                <select class="form-select" name="actividadId">
+                    <option value="0">Elegí una actividad</option>
+                    <option th:each="a : ${disponibles}" th:value="${a.id}"
+                            th:text="${a.nombre} + ' - ' + ${a.horario} + ' (' + ${a.lugaresLibres} + ' lugares)'">Actividad</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">Inscribir</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="row">
+        <!-- Pagos -->
+        <div class="col-md-7">
+            <div class="caja">
+                <h5>Pagos</h5>
+                <p th:if="${#lists.isEmpty(socio.pagos)}" class="text-muted">Todavía no hay pagos.</p>
+                <table class="table table-sm" th:unless="${#lists.isEmpty(socio.pagos)}">
+                    <thead><tr><th>Fecha</th><th>Monto</th><th>Medio</th><th>Período</th></tr></thead>
+                    <tbody>
+                    <tr th:each="p : ${socio.pagosOrdenados}">
+                        <td th:text="${#temporals.format(p.fecha, 'dd/MM/yyyy')}"></td>
+                        <td th:text="'$ ' + ${#numbers.formatDecimal(p.monto, 1, 'POINT', 2, 'COMMA')}"></td>
+                        <td th:text="${p.medioPago.texto}"></td>
+                        <td th:text="${#temporals.format(p.desde, 'dd/MM')} + ' al ' + ${#temporals.format(p.hasta, 'dd/MM/yyyy')}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Ingresos -->
+        <div class="col-md-5">
+            <div class="caja">
+                <h5>Últimos ingresos</h5>
+                <p th:if="${#lists.isEmpty(ingresos)}" class="text-muted">Sin ingresos registrados.</p>
+                <ul class="list-group" th:unless="${#lists.isEmpty(ingresos)}">
+                    <li class="list-group-item" th:each="i : ${ingresos}">
+                        <span th:text="${#temporals.format(i.fechaHora, 'dd/MM/yyyy HH:mm')}"></span>
+                        <span th:if="${i.actividad != null}" class="text-muted" th:text="' - ' + ${i.actividad.nombre}"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <a th:href="@{/empleado/socios}">Volver a socios</a>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

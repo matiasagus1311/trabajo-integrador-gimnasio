@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Mi cuenta')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navSocio}"></nav>
+<div class="container">
+    <h2 class="titulo">Mi cuenta</h2>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="caja">
+                <h5>Mis datos</h5>
+                <p class="mb-1"><b>Nombre:</b> <span th:text="${socio.nombreCompleto}"></span></p>
+                <p class="mb-1"><b>DNI:</b> <span th:text="${socio.dni}"></span></p>
+                <p class="mb-1"><b>Email:</b> <span th:text="${socio.email} ?: '-'"></span></p>
+                <p class="text-muted mb-0"><small>Para cambiar tus datos o tu plan, hablá con la recepción.</small></p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <form class="caja" method="post" th:action="@{/socio/cuenta}">
+                <h5>Cambiar clave</h5>
+                <div class="mb-3">
+                    <label class="form-label" for="actual">Clave actual</label>
+                    <input type="password" class="form-control" id="actual" name="actual" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="nueva">Clave nueva (mínimo 6 caracteres)</label>
+                    <input type="password" class="form-control" id="nueva" name="nueva" minlength="6" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="repetida">Repetí la clave nueva</label>
+                    <input type="password" class="form-control" id="repetida" name="repetida" required>
+                </div>
+                <button type="submit" class="btn btn-success">Cambiar clave</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

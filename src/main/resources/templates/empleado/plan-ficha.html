@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Plan')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navEmpleado}"></nav>
+<div class="container">
+    <h2 class="titulo" th:text="${plan.nombre}">Plan</h2>
+    <div class="caja">
+        <p class="mb-1"><b>Precio mensual:</b>
+            <span th:text="'$ ' + ${#numbers.formatDecimal(plan.precioMensual, 1, 'POINT', 2, 'COMMA')}"></span></p>
+        <p class="mb-1"><b>Actividades por semana:</b> <span th:text="'hasta ' + ${plan.maxActividades}"></span></p>
+        <p class="mb-0" th:text="${plan.descripcion}"></p>
+    </div>
+    <div class="caja">
+        <h5 th:text="'Socios activos (' + ${#lists.size(plan.sociosActivos)} + ')'">Socios</h5>
+        <p th:if="${#lists.isEmpty(plan.sociosActivos)}" class="text-muted">Este plan no tiene socios activos.</p>
+        <ul class="list-group" th:unless="${#lists.isEmpty(plan.sociosActivos)}">
+            <li class="list-group-item" th:each="s : ${plan.sociosActivos}">
+                <a th:href="@{/empleado/socios/{id}(id=${s.id})}" th:text="${s.apellido} + ', ' + ${s.nombre}"></a>
+                <span class="text-muted" th:text="' - DNI ' + ${s.dni}"></span>
+            </li>
+        </ul>
+    </div>
+    <a th:href="@{/empleado/planes}">Volver a planes</a>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

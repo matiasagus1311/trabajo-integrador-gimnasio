@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Ingreso')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navEmpleado}"></nav>
+<div class="container">
+    <h2 class="titulo">Registrar ingreso</h2>
+
+    <form class="caja row g-2" method="post" th:action="@{/empleado/ingresos}">
+        <div class="col-md-6">
+            <input type="text" class="form-control form-control-lg" name="dni" th:value="${dni}"
+                   placeholder="DNI del socio" autofocus required>
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-success btn-lg w-100">Registrar</button>
+        </div>
+    </form>
+
+    <!-- Resultado: puede pasar -->
+    <div class="alert alert-success" th:if="${ingreso != null}">
+        <p class="puede-pasar mb-1" th:text="'Puede pasar: ' + ${ingreso.socio.nombreCompleto}">Puede pasar</p>
+        <p class="mb-1" th:text="'Abono vigente hasta el ' + ${#temporals.format(ingreso.socio.venceAbono, 'dd/MM/yyyy')}"></p>
+        <p class="mb-0" th:if="${#lists.isEmpty(actividadesHoy)}">Hoy no tiene actividades anotadas (uso libre de sala).</p>
+        <p class="mb-0" th:unless="${#lists.isEmpty(actividadesHoy)}">
+            Hoy está anotado en:
+            <span th:each="a, it : ${actividadesHoy}"
+                  th:text="${a.nombre} + ' (' + ${a.horaInicio} + ')' + (${it.last} ? '' : ', ')"></span>
+        </p>
+    </div>
+    <!-- Resultado: no puede pasar -->
+    <div class="alert alert-danger puede-pasar" th:if="${rechazo != null}" th:text="${rechazo}">No puede pasar</div>
+
+    <div class="caja">
+        <h5 th:text="'Ingresos de hoy (' + ${#lists.size(ingresos)} + ')'">Ingresos de hoy</h5>
+        <p th:if="${#lists.isEmpty(ingresos)}" class="text-muted">Todavía no entró nadie hoy.</p>
+        <table class="table table-sm" th:unless="${#lists.isEmpty(ingresos)}">
+            <thead><tr><th>Hora</th><th>Socio</th><th>DNI</th><th>Actividad</th></tr></thead>
+            <tbody>
+            <tr th:each="i : ${ingresos}">
+                <td th:text="${#temporals.format(i.fechaHora, 'HH:mm')}"></td>
+                <td><a th:href="@{/empleado/socios/{id}(id=${i.socio.id})}" th:text="${i.socio.nombreCompleto}"></a></td>
+                <td th:text="${i.socio.dni}"></td>
+                <td th:text="${i.actividad != null} ? ${i.actividad.nombre} : '-'"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

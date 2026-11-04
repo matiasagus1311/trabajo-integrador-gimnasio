@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Actividades')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navSocio}"></nav>
+<div class="container">
+    <h2 class="titulo">Actividades</h2>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <div class="alert alert-warning" th:if="${!socio.abonoVigente}">
+        Tu abono no está vigente: para anotarte primero tenés que pagar la cuota en la recepción.
+    </div>
+    <p th:text="'Tu plan te permite hasta ' + ${socio.plan.maxActividades} + ' actividades. Estás anotado en ' + ${#lists.size(mias)} + '.'"></p>
+
+    <div class="caja">
+        <table class="table table-striped">
+            <thead><tr><th>Actividad</th><th>Día</th><th>Horario</th><th>Lugares libres</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="a : ${actividades}">
+                <td th:text="${a.nombre}"></td>
+                <td th:text="${a.dia.texto}"></td>
+                <td th:text="${a.horaInicio} + ' a ' + ${a.horaFin}"></td>
+                <td>
+                    <span th:if="${a.hayCupo()}" th:text="${a.lugaresLibres}"></span>
+                    <span th:unless="${a.hayCupo()}" class="badge bg-danger">Completa</span>
+                </td>
+                <td class="text-end">
+                    <form th:if="${mias.contains(a)}" method="post" th:action="@{/socio/actividades/{id}/baja(id=${a.id})}">
+                        <span class="badge bg-success me-2">Anotado</span>
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Darme de baja</button>
+                    </form>
+                    <form th:unless="${mias.contains(a)}" method="post" th:action="@{/socio/actividades/{id}/anotarme(id=${a.id})}">
+                        <button type="submit" class="btn btn-success btn-sm"
+                                th:disabled="${!a.hayCupo() or !socio.abonoVigente}">Anotarme</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

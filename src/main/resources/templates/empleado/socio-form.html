@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Socio')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navEmpleado}"></nav>
+<div class="container">
+    <h2 class="titulo" th:text="${id == 0} ? 'Nuevo socio' : 'Editar socio'">Socio</h2>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <form class="caja" method="post" th:object="${socio}"
+          th:action="${id == 0} ? @{/empleado/socios/nuevo} : @{/empleado/socios/{id}/editar(id=${id})}">
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">DNI</label>
+                <input type="text" class="form-control" th:field="*{dni}">
+                <div class="error-campo" th:if="${#fields.hasErrors('dni')}" th:errors="*{dni}"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" th:field="*{nombre}">
+                <div class="error-campo" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Apellido</label>
+                <input type="text" class="form-control" th:field="*{apellido}">
+                <div class="error-campo" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Email (opcional)</label>
+                <input type="email" class="form-control" th:field="*{email}">
+                <div class="error-campo" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Plan</label>
+                <select class="form-select" name="planId">
+                    <option value="0">Elegí un plan</option>
+                    <option th:each="p : ${planes}" th:value="${p.id}" th:selected="${p.id == planId}"
+                            th:text="${p.nombre} + ' - $ ' + ${#numbers.formatDecimal(p.precioMensual, 1, 'POINT', 0, 'COMMA')}">Plan</option>
+                </select>
+                <div class="error-campo" th:if="${errorPlan}" th:text="${errorPlan}"></div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" th:field="*{grupoFamiliar}">
+                <label class="form-check-label" th:for="${#ids.prev('grupoFamiliar')}">Grupo familiar (10% de descuento)</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" th:field="*{empleadoComercio}">
+                <label class="form-check-label" th:for="${#ids.prev('empleadoComercio')}">Empleado de comercio (20% de descuento)</label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a class="btn btn-secondary" th:href="${id == 0} ? @{/empleado/socios} : @{/empleado/socios/{id}(id=${id})}">Cancelar</a>
+    </form>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>

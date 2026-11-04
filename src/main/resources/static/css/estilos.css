@@ -1,0 +1,38 @@
+/* Estilos propios. El resto lo pone Bootstrap. */
+
+body {
+    background-color: #f4f6f8;
+}
+
+/* Título de cada pantalla */
+.titulo {
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+/* Caja blanca donde van los formularios y las tablas */
+.caja {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Login centrado */
+#login {
+    max-width: 380px;
+    margin: 80px auto;
+}
+
+/* Resultado del registro de ingreso */
+.puede-pasar {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+/* Errores de validación debajo de cada campo */
+.error-campo {
+    color: #dc3545;
+    font-size: 0.9em;
+}

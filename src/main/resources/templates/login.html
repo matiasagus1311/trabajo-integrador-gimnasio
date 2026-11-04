@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Ingresar')}"></head>
+<body>
+<div id="login" class="caja">
+    <h3 class="text-center mb-4">Gimnasio</h3>
+
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <form th:action="@{/login}" method="post">
+        <div class="mb-3">
+            <label for="dni" class="form-label">DNI</label>
+            <input type="text" class="form-control" id="dni" name="dni" th:value="${dni}" required>
+        </div>
+        <div class="mb-3">
+            <label for="clave" class="form-label">Clave</label>
+            <input type="password" class="form-control" id="clave" name="clave" required>
+        </div>
+        <button type="submit" class="btn btn-success w-100">Ingresar</button>
+    </form>
+    <p class="text-muted mt-3 mb-0"><small>Socios: la primera vez la clave es tu DNI.</small></p>
+</div>
+</body>
+</html>

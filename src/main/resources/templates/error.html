@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Error')}"></head>
+<body>
+<div class="container">
+    <div class="caja" style="margin-top: 60px;">
+        <h3>Algo salió mal</h3>
+        <p th:text="'Error ' + ${status} + ': la página no existe o hubo un problema.'">Error</p>
+        <a class="btn btn-primary" th:href="@{/}">Volver al inicio</a>
+    </div>
+</div>
+</body>
+</html>

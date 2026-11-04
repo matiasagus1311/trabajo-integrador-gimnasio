@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragmentos/base :: head('Actividad')}"></head>
+<body>
+<nav th:replace="~{fragmentos/base :: navEmpleado}"></nav>
+<div class="container">
+    <h2 class="titulo" th:text="${actividad.nombre}">Actividad</h2>
+    <div th:replace="~{fragmentos/base :: mensajes}"></div>
+
+    <div class="caja">
+        <p class="mb-1"><b>Horario:</b> <span th:text="${actividad.horario}"></span></p>
+        <p class="mb-1"><b>Cupo:</b>
+            <span th:text="${#lists.size(actividad.inscriptos)} + ' inscriptos de ' + ${actividad.cupo} + ' (' + ${actividad.lugaresLibres} + ' libres)'"></span></p>
+        <p class="mb-3"><b>Estado:</b>
+            <span th:if="${actividad.activa}" class="badge bg-success">Activa</span>
+            <span th:unless="${actividad.activa}" class="badge bg-secondary">Inactiva</span></p>
+        <a class="btn btn-outline-secondary btn-sm" th:href="@{/empleado/actividades/{id}/editar(id=${actividad.id})}">Editar</a>
+        <form class="d-inline" method="post" th:action="@{/empleado/actividades/{id}/eliminar(id=${actividad.id})}">
+            <button type="submit" class="btn btn-outline-danger btn-sm"
+                    onclick="return confirm('¿Eliminar la actividad?')">Eliminar</button>
+        </form>
+    </div>
+
+    <div class="caja">
+        <h5>Inscriptos</h5>
+        <p th:if="${#lists.isEmpty(actividad.inscriptos)}" class="text-muted">Todavía no hay inscriptos.</p>
+        <table class="table table-sm" th:unless="${#lists.isEmpty(actividad.inscriptos)}">
+            <thead><tr><th>Socio</th><th>DNI</th><th>Plan</th><th></th></tr></thead>
+            <tbody>
+            <tr th:each="s : ${actividad.inscriptos}">
+                <td><a th:href="@{/empleado/socios/{id}(id=${s.id})}" th:text="${s.apellido} + ', ' + ${s.nombre}"></a></td>
+                <td th:text="${s.dni}"></td>
+                <td th:text="${s.plan.nombre}"></td>
+                <td class="text-end">
+                    <form method="post" th:action="@{/empleado/actividades/{id}/desinscribir(id=${actividad.id})}">
+                        <input type="hidden" name="socioId" th:value="${s.id}">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Quitar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <form th:if="${actividad.activa and actividad.hayCupo()}" class="row g-2" method="post"
+              th:action="@{/empleado/actividades/{id}/inscribir(id=${actividad.id})}">
+            <div class="col-md-8">
+                <select class="form-select" name="socioId">
+                    <option value="0">Elegí un socio (solo con el abono al día)</option>
+                    <option th:each="s : ${disponibles}" th:value="${s.id}"
+                            th:text="${s.apellido} + ', ' + ${s.nombre} + ' - DNI ' + ${s.dni}">Socio</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">Inscribir</button>
+            </div>
+        </form>
+        <p th:if="${actividad.activa and !actividad.hayCupo()}" class="text-danger mb-0">La actividad está completa.</p>
+    </div>
+    <a th:href="@{/empleado/actividades}">Volver a actividades</a>
+</div>
+<script th:replace="~{fragmentos/base :: scripts}"></script>
+</body>
+</html>
