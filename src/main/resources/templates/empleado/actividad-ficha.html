@@ -28,7 +28,7 @@
             <thead><tr><th>Socio</th><th>DNI</th><th>Plan</th><th></th></tr></thead>
             <tbody>
             <tr th:each="s : ${actividad.inscriptos}">
-                <td><a th:href="@{/empleado/socios/{id}(id=${s.id})}" th:text="${s.apellido} + ', ' + ${s.nombre}"></a></td>
+                <td th:text="${s.apellido} + ', ' + ${s.nombre}"></td>
                 <td th:text="${s.dni}"></td>
                 <td th:text="${s.plan != null} ? ${s.plan.nombre} : '-'"></td>
                 <td class="text-end">
@@ -56,7 +56,7 @@
         </form>
         <p th:if="${actividad.activa and !actividad.hayCupo()}" class="text-danger mb-0">La actividad está completa.</p>
     </div>
-    <a th:href="@{/empleado/actividades}">Volver a actividades</a>
+    <a class="btn btn-secondary" th:href="@{/empleado/actividades}">Volver a actividades</a>
 </div>
 <script th:replace="~{fragmentos/base :: scripts}"></script>
 </body>

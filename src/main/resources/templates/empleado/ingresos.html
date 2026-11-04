@@ -38,7 +38,7 @@
             <tbody>
             <tr th:each="i : ${ingresos}">
                 <td th:text="${#temporals.format(i.fechaHora, 'HH:mm')}"></td>
-                <td><a th:href="@{/empleado/socios/{id}(id=${i.socio.id})}" th:text="${i.socio.nombreCompleto}"></a></td>
+                <td th:text="${i.socio.nombreCompleto}"></td>
                 <td th:text="${i.socio.dni}"></td>
                 <td th:text="${i.actividad != null} ? ${i.actividad.nombre} : '-'"></td>
             </tr>

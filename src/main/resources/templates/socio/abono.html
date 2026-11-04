@@ -26,7 +26,8 @@
             <div class="caja">
                 <h5>Mis actividades</h5>
                 <p th:if="${#lists.isEmpty(actividades)}" class="text-muted">
-                    No estás anotado en ninguna. <a th:href="@{/socio/actividades}">Anotarme</a></p>
+                    No estás anotado en ninguna.</p>
+                <a th:if="${#lists.isEmpty(actividades)}" class="btn btn-success btn-sm" th:href="@{/socio/actividades}">Anotarme</a>
                 <ul class="list-group" th:unless="${#lists.isEmpty(actividades)}">
                     <li class="list-group-item" th:each="a : ${actividades}" th:text="${a.nombre} + ' - ' + ${a.horario}"></li>
                 </ul>

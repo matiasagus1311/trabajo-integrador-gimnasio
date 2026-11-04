@@ -38,8 +38,7 @@
                 <h5>Abono</h5>
                 <p class="mb-1"><b>Plan:</b>
                     <span th:if="${socio.plan == null}" class="text-muted">Sin abono (se elige al cobrar)</span>
-                    <a th:if="${socio.plan != null}" th:href="@{/empleado/planes/{id}(id=${socio.plan.id})}"
-                       th:text="${socio.plan.nombre}">Plan</a></p>
+                    <span th:if="${socio.plan != null}" th:text="${socio.plan.nombre}">Plan</span></p>
                 <p class="mb-1"><b>Vigente hasta:</b>
                     <span th:if="${socio.venceAbono == null}" class="text-danger">Nunca pagó</span>
                     <span th:if="${socio.venceAbono != null}" th:classappend="${socio.abonoVigente} ? 'text-success' : 'text-danger'"
@@ -57,7 +56,7 @@
         <p th:if="${#lists.isEmpty(actividades)}" class="text-muted">No está anotado en ninguna actividad.</p>
         <ul class="list-group mb-3" th:unless="${#lists.isEmpty(actividades)}">
             <li class="list-group-item d-flex justify-content-between align-items-center" th:each="a : ${actividades}">
-                <span><a th:href="@{/empleado/actividades/{id}(id=${a.id})}" th:text="${a.nombre}"></a>
+                <span><span th:text="${a.nombre}"></span>
                     <span th:text="' - ' + ${a.horario}"></span></span>
                 <form method="post" th:action="@{/empleado/socios/{id}/desinscribir(id=${socio.id})}">
                     <input type="hidden" name="actividadId" th:value="${a.id}">
@@ -114,7 +113,7 @@
             </div>
         </div>
     </div>
-    <a th:href="@{/empleado/socios}">Volver a socios</a>
+    <a class="btn btn-secondary" th:href="@{/empleado/socios}">Volver a socios</a>
 </div>
 <script th:replace="~{fragmentos/base :: scripts}"></script>
 </body>

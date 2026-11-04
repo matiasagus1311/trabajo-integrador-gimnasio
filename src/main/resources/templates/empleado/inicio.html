@@ -12,21 +12,21 @@
             <div class="caja">
                 <p class="mb-1">Socios activos</p>
                 <h3 th:text="${sociosActivos}">0</h3>
-                <a th:href="@{/empleado/socios}">Ver socios</a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/empleado/socios}">Ver socios</a>
             </div>
         </div>
         <div class="col-md-4">
             <div class="caja">
                 <p class="mb-1">Abonos vencidos o sin pagar</p>
                 <h3 class="text-danger" th:text="${abonosVencidos}">0</h3>
-                <a th:href="@{/empleado/socios(estado='vencido')}">Ver quiénes son</a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/empleado/socios(estado='vencido')}">Ver quiénes son</a>
             </div>
         </div>
         <div class="col-md-4">
             <div class="caja">
                 <p class="mb-1">Ingresos de hoy</p>
                 <h3 th:text="${#lists.size(ingresosHoy)}">0</h3>
-                <a th:href="@{/empleado/ingresos}">Registrar ingreso</a>
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/empleado/ingresos}">Registrar ingreso</a>
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
         <p th:if="${#lists.isEmpty(actividadesHoy)}" class="text-muted">Hoy no hay actividades.</p>
         <ul class="list-group" th:unless="${#lists.isEmpty(actividadesHoy)}">
             <li class="list-group-item" th:each="a : ${actividadesHoy}">
-                <a th:href="@{/empleado/actividades/{id}(id=${a.id})}" th:text="${a.nombre}">Actividad</a>
+                <span th:text="${a.nombre}">Actividad</span>
                 <span th:text="' - ' + ${a.horaInicio} + ' a ' + ${a.horaFin}"></span>
                 <span class="float-end" th:text="${#lists.size(a.inscriptos)} + ' / ' + ${a.cupo} + ' inscriptos'"></span>
             </li>
