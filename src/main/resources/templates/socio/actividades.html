@@ -10,7 +10,7 @@
     <div class="alert alert-warning" th:if="${!socio.abonoVigente}">
         Tu abono no está vigente: para anotarte primero tenés que pagar la cuota en la recepción.
     </div>
-    <p th:text="'Tu plan te permite hasta ' + ${socio.plan.maxActividades} + ' actividades. Estás anotado en ' + ${#lists.size(mias)} + '.'"></p>
+    <p th:if="${socio.plan != null}" th:text="'Tu plan te permite hasta ' + ${socio.plan.maxActividades} + ' actividades. Estás anotado en ' + ${#lists.size(mias)} + '.'"></p>
 
     <div class="caja">
         <table class="table table-striped">

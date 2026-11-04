@@ -11,11 +11,10 @@
         <div class="col-md-6">
             <div class="caja">
                 <h5>Mi abono</h5>
-                <p class="mb-1"><b>Plan:</b> <span th:text="${socio.plan.nombre}"></span></p>
-                <p class="mb-1"><b>Cuota mensual:</b>
-                    <span th:text="'$ ' + ${#numbers.formatDecimal(socio.calcularCuota(), 1, 'POINT', 2, 'COMMA')}"></span></p>
+                <p class="mb-1"><b>Plan:</b>
+                    <span th:text="${socio.plan != null} ? ${socio.plan.nombre} : 'todavía no elegiste (se elige al pagar)'"></span></p>
                 <p class="mb-1" th:if="${socio.ultimoPago != null}"><b>Último pago:</b>
-                    <span th:text="${#temporals.format(socio.ultimoPago.fecha, 'dd/MM/yyyy')}"></span></p>
+                    <span th:text="${#temporals.format(socio.ultimoPago.fecha, 'dd/MM/yyyy')} + ' - $ ' + ${#numbers.formatDecimal(socio.ultimoPago.monto, 1, 'POINT', 2, 'COMMA')}"></span></p>
                 <p class="mb-0"><b>Vigente hasta:</b>
                     <span th:if="${socio.venceAbono == null}" class="text-danger">todavía no pagaste</span>
                     <span th:if="${socio.venceAbono != null}" th:classappend="${socio.abonoVigente} ? 'text-success' : 'text-danger'"

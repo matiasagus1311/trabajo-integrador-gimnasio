@@ -17,14 +17,17 @@ public interface IServicioSocio {
 
     Socio consultar(int id);
 
-    /** Alta: valida, encripta la clave inicial (el DNI) y guarda. */
-    Socio alta(Socio datos, int planId);
+    /** Alta con los datos personales: valida, encripta la clave inicial (el DNI) y guarda. */
+    Socio alta(Socio datos);
 
-    /** Modificación de los datos y el plan de un socio. */
-    Socio modificar(int id, Socio datos, int planId);
+    /** Modificación de los datos personales de un socio. */
+    Socio modificar(int id, Socio datos);
 
-    /** Cambia el abono (plan) del socio. No deja si ya está anotado en más actividades de las que permite el plan nuevo. */
-    void cambiarPlan(int id, int planId);
+    /**
+     * Guarda el abono (plan) y los descuentos que se eligieron al cobrar.
+     * No deja si ya está anotado en más actividades de las que permite el plan.
+     */
+    void cambiarAbono(int id, int planId, boolean grupoFamiliar, boolean empleadoComercio);
     /** Baja lógica: queda inactivo y se lo saca de sus actividades. */
     void darDeBaja(int id);
 

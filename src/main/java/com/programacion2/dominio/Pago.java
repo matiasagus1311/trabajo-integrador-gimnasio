@@ -25,6 +25,11 @@ public class Pago {
     @Persistent(defaultFetchGroup = "true")
     private Socio socio;
 
+    // Abono que se cobró en este pago (N a 1 con Plan)
+    @Column(name = "PLAN_ID")
+    @Persistent(defaultFetchGroup = "true")
+    private Plan plan;
+
     private LocalDate fecha;
 
     @Column(length = 12, scale = 2)
@@ -39,9 +44,10 @@ public class Pago {
 
     public Pago() { }
 
-    public Pago(Socio socio, LocalDate fecha, BigDecimal monto, MedioPago medioPago,
+    public Pago(Socio socio, Plan plan, LocalDate fecha, BigDecimal monto, MedioPago medioPago,
                 LocalDate desde, LocalDate hasta) {
         this.socio = socio;
+        this.plan = plan;
         this.fecha = fecha;
         this.monto = monto;
         this.medioPago = medioPago;
@@ -54,6 +60,8 @@ public class Pago {
     public Socio getSocio() { return socio; }
     public void setSocio(Socio socio) { this.socio = socio; }
 
+    public Plan getPlan() { return plan; }
+    public void setPlan(Plan plan) { this.plan = plan; }
     public LocalDate getFecha() { return fecha; }
     public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 

@@ -35,7 +35,8 @@ public class Socio extends Persona {
 
     private boolean activo = true;
 
-    @Column(name = "PLAN_ID")
+    // Abono actual: null hasta que se le cobra por primera vez
+    @Column(name = "PLAN_ID", allowsNull = "true")
     @Persistent(defaultFetchGroup = "true")
     private Plan plan;
 
@@ -44,9 +45,9 @@ public class Socio extends Persona {
 
     public Socio() { }
 
-    public Socio(String dni, String nombre, String apellido, String email, Plan plan) {
+    /** El plan (abono) y los descuentos no se cargan en el alta: se eligen al cobrar. */
+    public Socio(String dni, String nombre, String apellido, String email) {
         super(dni, nombre, apellido, email);
-        this.plan = plan;
         this.fechaAlta = LocalDate.now();
     }
 

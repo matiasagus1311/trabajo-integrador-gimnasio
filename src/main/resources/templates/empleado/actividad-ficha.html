@@ -30,7 +30,7 @@
             <tr th:each="s : ${actividad.inscriptos}">
                 <td><a th:href="@{/empleado/socios/{id}(id=${s.id})}" th:text="${s.apellido} + ', ' + ${s.nombre}"></a></td>
                 <td th:text="${s.dni}"></td>
-                <td th:text="${s.plan.nombre}"></td>
+                <td th:text="${s.plan != null} ? ${s.plan.nombre} : '-'"></td>
                 <td class="text-end">
                     <form method="post" th:action="@{/empleado/actividades/{id}/desinscribir(id=${actividad.id})}">
                         <input type="hidden" name="socioId" th:value="${s.id}">

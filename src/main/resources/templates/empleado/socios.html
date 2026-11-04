@@ -45,7 +45,6 @@
                 <th>Apellido y nombre</th>
                 <th>DNI</th>
                 <th>Plan</th>
-                <th>Cuota</th>
                 <th>Abono</th>
                 <th></th>
             </tr>
@@ -54,8 +53,7 @@
             <tr th:each="s : ${socios}">
                 <td th:text="${s.apellido} + ', ' + ${s.nombre}">Gómez, Ana</td>
                 <td th:text="${s.dni}">40111222</td>
-                <td th:text="${s.plan.nombre}">Plan</td>
-                <td th:text="'$ ' + ${#numbers.formatDecimal(s.calcularCuota(), 1, 'POINT', 2, 'COMMA')}">$ 0</td>
+                <td th:text="${s.plan != null} ? ${s.plan.nombre} : '-'">Plan</td>
                 <td>
                     <span th:if="${!s.activo}" class="badge bg-secondary">De baja</span>
                     <span th:if="${s.activo and s.abonoVigente}" class="badge bg-success"

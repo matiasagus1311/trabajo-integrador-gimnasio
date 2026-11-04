@@ -70,27 +70,23 @@ public class SocioControlador {
     @GetMapping("/nuevo")
     public String formularioAlta(Model model) {
         model.addAttribute("socio", new Socio());
-        return mostrarFormulario(model, 0, 0);
+        return mostrarFormulario(model, 0);
     }
 
     @PostMapping("/nuevo")
     public String alta(@Valid @ModelAttribute("socio") Socio socio, BindingResult errores,
-                       @RequestParam(defaultValue = "0") int planId,
                        Model model, RedirectAttributes redirect) {
-        if (planId == 0) {
-            model.addAttribute("errorPlan", "Elegí un plan");
-        }
-        if (errores.hasErrors() || planId == 0) {
-            return mostrarFormulario(model, 0, planId);
+        if (errores.hasErrors()) {
+            return mostrarFormulario(model, 0);
         }
         try {
-            Socio nuevo = servicioSocio.alta(socio, planId);
+            Socio nuevo = servicioSocio.alta(socio);
             redirect.addFlashAttribute("exito", "Socio " + nuevo.getNombreCompleto()
                     + " dado de alta. Su clave para entrar es su DNI.");
             return "redirect:/empleado/socios/" + nuevo.getId();
         } catch (ServicioException e) {
             model.addAttribute("error", e.getMessage());
-            return mostrarFormulario(model, 0, planId);
+            return mostrarFormulario(model, 0);
         }
     }
 
@@ -101,7 +97,7 @@ public class SocioControlador {
         try {
             Socio socio = servicioSocio.consultar(id);
             model.addAttribute("socio", socio);
-            return mostrarFormulario(model, id, socio.getPlan().getId());
+            return mostrarFormulario(model, id);
         } catch (ServicioException e) {
             redirect.addFlashAttribute("error", e.getMessage());
             return "redirect:/empleado/socios";
@@ -111,28 +107,22 @@ public class SocioControlador {
     @PostMapping("/{id}/editar")
     public String modificar(@PathVariable int id,
                             @Valid @ModelAttribute("socio") Socio socio, BindingResult errores,
-                            @RequestParam(defaultValue = "0") int planId,
                             Model model, RedirectAttributes redirect) {
-        if (planId == 0) {
-            model.addAttribute("errorPlan", "Elegí un plan");
-        }
-        if (errores.hasErrors() || planId == 0) {
-            return mostrarFormulario(model, id, planId);
+        if (errores.hasErrors()) {
+            return mostrarFormulario(model, id);
         }
         try {
-            servicioSocio.modificar(id, socio, planId);
+            servicioSocio.modificar(id, socio);
             redirect.addFlashAttribute("exito", "Datos del socio guardados.");
             return "redirect:/empleado/socios/" + id;
         } catch (ServicioException e) {
             model.addAttribute("error", e.getMessage());
-            return mostrarFormulario(model, id, planId);
+            return mostrarFormulario(model, id);
         }
     }
 
-    private String mostrarFormulario(Model model, int id, int planId) {
+    private String mostrarFormulario(Model model, int id) {
         model.addAttribute("id", id);              // 0 = alta, otro = modificación
-        model.addAttribute("planId", planId);
-        model.addAttribute("planes", servicioPlan.listar());
         return "empleado/socio-form";
     }
 
@@ -205,12 +195,14 @@ public class SocioControlador {
     @PostMapping("/{id}/cobrar")
     public String cobrar(@PathVariable int id,
                          @RequestParam(defaultValue = "0") int planId,
+                         @RequestParam(defaultValue = "false") boolean grupoFamiliar,
+                         @RequestParam(defaultValue = "false") boolean empleadoComercio,
                          @RequestParam(required = false) MedioPago medioPago,
                          RedirectAttributes redirect) {
         try {
-            Pago pago = servicioPago.cobrar(id, planId, medioPago);
-            redirect.addFlashAttribute("exito", "Cobro registrado: " + pago.getSocio().getPlan().getNombre()
-                    + ". Abono vigente hasta el " + Formato.fecha(pago.getHasta()) + ".");
+            Pago pago = servicioPago.cobrar(id, planId, grupoFamiliar, empleadoComercio, medioPago);
+            redirect.addFlashAttribute("exito", "Cobro registrado: " + pago.getPlan().getNombre()
+                    + " por $ " + Formato.plata(pago.getMonto()) + ". Abono vigente hasta el " + Formato.fecha(pago.getHasta()) + ".");
             return "redirect:/empleado/socios/" + id;
         } catch (ServicioException e) {
             redirect.addFlashAttribute("error", e.getMessage());

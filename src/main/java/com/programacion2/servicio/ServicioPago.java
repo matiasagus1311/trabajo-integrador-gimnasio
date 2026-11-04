@@ -40,11 +40,12 @@ public class ServicioPago implements IServicioPago {
         LocalDate desde = (vence != null && !vence.isBefore(hoy)) ? vence.plusDays(1) : hoy;
         LocalDate hasta = desde.plusMonths(1).minusDays(1);
 
-        return new Pago(socio, hoy, socio.calcularCuota(), null, desde, hasta);
+        return new Pago(socio, socio.getPlan(), hoy, socio.calcularCuota(), null, desde, hasta);
     }
 
     @Override
-    public Pago cobrar(int socioId, int planId, MedioPago medioPago) {
+    public Pago cobrar(int socioId, int planId, boolean grupoFamiliar, boolean empleadoComercio,
+                       MedioPago medioPago) {
         if (planId == 0) {
             throw new ServicioException("Elegí el abono que se le cobra.");
         }
@@ -55,8 +56,9 @@ public class ServicioPago implements IServicioPago {
             throw new ServicioException("No se le puede cobrar a un socio dado de baja.");
         }
         servicioPlan.consultar(planId);                  // valida que el plan exista
-        servicioSocio.cambiarPlan(socioId, planId);      // si es otro plan, se lo cambia (o avisa por qué no)
-        Pago pago = prepararCobro(socioId);              // monto con el plan ya actualizado
+        // Se guarda el abono elegido en el socio (o avisa por qué no se puede)
+        servicioSocio.cambiarAbono(socioId, planId, grupoFamiliar, empleadoComercio);
+        Pago pago = prepararCobro(socioId);              // monto con el abono ya actualizado
         pago.setMedioPago(medioPago);
         repositorio.guardar(pago);        // INSERT en pago con SOCIO_ID
         return pago;

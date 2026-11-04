@@ -9,8 +9,9 @@ public interface IServicioPago {
     Pago prepararCobro(int socioId);
 
     /**
-     * Operación de negocio: cobra el abono elegido (planId) y lo extiende un mes.
-     * Si el plan elegido es distinto del que tenía, se le cambia el plan al socio.
+     * Operación de negocio: cobra el abono elegido (plan y descuentos) y lo extiende un mes.
+     * El plan y los descuentos quedan guardados en el socio como su abono actual.
      */
-    Pago cobrar(int socioId, int planId, MedioPago medioPago);
+    Pago cobrar(int socioId, int planId, boolean grupoFamiliar, boolean empleadoComercio,
+                MedioPago medioPago);
 }

@@ -84,12 +84,12 @@ public class DatosIniciales implements CommandLineRunner {
                 new Actividad("Zumba", DiaSemana.SABADO, LocalTime.of(10, 0), LocalTime.of(11, 0), 20));
 
         // Socios de ejemplo (la clave inicial de cada uno es su DNI)
-        Socio ana = servicioSocio.alta(nuevoSocio("40111222", "Ana", "Gómez", "ana@mail.com", true, false), dos.getId());
-        Socio juan = servicioSocio.alta(nuevoSocio("38222333", "Juan", "Pérez", null, false, true), libre.getId());
-        servicioSocio.alta(nuevoSocio("42333444", "Lucía", "Díaz", null, false, false), tres.getId());   // sin pagar
+        Socio ana = servicioSocio.alta(nuevoSocio("40111222", "Ana", "Gómez", "ana@mail.com"));
+        Socio juan = servicioSocio.alta(nuevoSocio("38222333", "Juan", "Pérez", null));
+        servicioSocio.alta(nuevoSocio("42333444", "Lucía", "Díaz", null));   // sin pagar todavía
 
-        servicioPago.cobrar(ana.getId(), dos.getId(), MedioPago.EFECTIVO);
-        servicioPago.cobrar(juan.getId(), libre.getId(), MedioPago.TRANSFERENCIA);
+        servicioPago.cobrar(ana.getId(), dos.getId(), true, false, MedioPago.EFECTIVO);     // grupo familiar
+        servicioPago.cobrar(juan.getId(), libre.getId(), false, true, MedioPago.TRANSFERENCIA);  // empleado de comercio
 
         servicioActividad.inscribir(funcional.getId(), ana.getId());
         servicioActividad.inscribir(spinning.getId(), juan.getId());
@@ -97,15 +97,12 @@ public class DatosIniciales implements CommandLineRunner {
         System.out.println("Datos iniciales cargados. Empleado: DNI 11111111 / clave admin123");
     }
 
-    private Socio nuevoSocio(String dni, String nombre, String apellido, String email,
-                             boolean grupoFamiliar, boolean empleadoComercio) {
+    private Socio nuevoSocio(String dni, String nombre, String apellido, String email) {
         Socio s = new Socio();
         s.setDni(dni);
         s.setNombre(nombre);
         s.setApellido(apellido);
         s.setEmail(email);
-        s.setGrupoFamiliar(grupoFamiliar);
-        s.setEmpleadoComercio(empleadoComercio);
         return s;
     }
 }

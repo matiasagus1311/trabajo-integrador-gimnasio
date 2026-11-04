@@ -37,12 +37,9 @@
             <div class="caja">
                 <h5>Abono</h5>
                 <p class="mb-1"><b>Plan:</b>
-                    <a th:href="@{/empleado/planes/{id}(id=${socio.plan.id})}" th:text="${socio.plan.nombre}">Plan</a></p>
-                <p class="mb-1"><b>Cuota:</b>
-                    <span th:text="'$ ' + ${#numbers.formatDecimal(socio.calcularCuota(), 1, 'POINT', 2, 'COMMA')}"></span>
-                    <small class="text-muted" th:if="${socio.grupoFamiliar}">(grupo familiar)</small>
-                    <small class="text-muted" th:if="${socio.empleadoComercio}">(empleado de comercio)</small>
-                </p>
+                    <span th:if="${socio.plan == null}" class="text-muted">Sin abono (se elige al cobrar)</span>
+                    <a th:if="${socio.plan != null}" th:href="@{/empleado/planes/{id}(id=${socio.plan.id})}"
+                       th:text="${socio.plan.nombre}">Plan</a></p>
                 <p class="mb-1"><b>Vigente hasta:</b>
                     <span th:if="${socio.venceAbono == null}" class="text-danger">Nunca pagó</span>
                     <span th:if="${socio.venceAbono != null}" th:classappend="${socio.abonoVigente} ? 'text-success' : 'text-danger'"
@@ -90,10 +87,11 @@
                 <h5>Pagos</h5>
                 <p th:if="${#lists.isEmpty(socio.pagos)}" class="text-muted">Todavía no hay pagos.</p>
                 <table class="table table-sm" th:unless="${#lists.isEmpty(socio.pagos)}">
-                    <thead><tr><th>Fecha</th><th>Monto</th><th>Medio</th><th>Período</th></tr></thead>
+                    <thead><tr><th>Fecha</th><th>Abono</th><th>Monto</th><th>Medio</th><th>Período</th></tr></thead>
                     <tbody>
                     <tr th:each="p : ${socio.pagosOrdenados}">
                         <td th:text="${#temporals.format(p.fecha, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${p.plan.nombre}"></td>
                         <td th:text="'$ ' + ${#numbers.formatDecimal(p.monto, 1, 'POINT', 2, 'COMMA')}"></td>
                         <td th:text="${p.medioPago.texto}"></td>
                         <td th:text="${#temporals.format(p.desde, 'dd/MM')} + ' al ' + ${#temporals.format(p.hasta, 'dd/MM/yyyy')}"></td>

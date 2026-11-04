@@ -115,14 +115,12 @@ public class ServicioSocio implements IServicioSocio {
     }
 
     @Override
-    public Socio alta(Socio datos, int planId) {
+    public Socio alta(Socio datos) {
         validarDniLibre(datos.getDni(), 0);
-        Plan plan = servicioPlan.consultar(planId);
 
+        // Solo datos personales: el abono y los descuentos se eligen al cobrar
         Socio socio = new Socio(datos.getDni().trim(), capitalizar(datos.getNombre()),
-                capitalizar(datos.getApellido()), limpiar(datos.getEmail()), plan);
-        socio.setGrupoFamiliar(datos.isGrupoFamiliar());
-        socio.setEmpleadoComercio(datos.isEmpleadoComercio());
+                capitalizar(datos.getApellido()), limpiar(datos.getEmail()));
         socio.setActivo(true);
         // La clave inicial es el DNI; el socio la cambia desde "Mi cuenta"
         socio.setClave(encriptador.encode(socio.getDni()));
@@ -132,30 +130,23 @@ public class ServicioSocio implements IServicioSocio {
     }
 
     @Override
-    public Socio modificar(int id, Socio datos, int planId) {
+    public Socio modificar(int id, Socio datos) {
         Socio socio = consultar(id);                 // queda desatado (detached)
         validarDniLibre(datos.getDni(), id);
-        Plan plan = servicioPlan.consultar(planId);
 
         socio.setDni(datos.getDni().trim());
         socio.setNombre(capitalizar(datos.getNombre()));
         socio.setApellido(capitalizar(datos.getApellido()));
         socio.setEmail(limpiar(datos.getEmail()));
-        socio.setGrupoFamiliar(datos.isGrupoFamiliar());
-        socio.setEmpleadoComercio(datos.isEmpleadoComercio());
-        socio.setPlan(plan);
 
         repositorio.guardar(socio);                  // detached-dirty -> UPDATE
         return socio;
     }
 
     @Override
-    public void cambiarPlan(int id, int planId) {
+    public void cambiarAbono(int id, int planId, boolean grupoFamiliar, boolean empleadoComercio) {
         Socio socio = consultar(id);
         Plan plan = servicioPlan.consultar(planId);
-        if (socio.getPlan() != null && socio.getPlan().getId() == plan.getId()) {
-            return;                                  // es el mismo plan: no hay nada que cambiar
-        }
         int anotadas = repositorioActividades.consultar(Actividad.class, "porSocio", id).size();
         if (anotadas > plan.getMaxActividades()) {
             throw new ServicioException("Con el plan " + plan.getNombre() + " puede tener hasta "
@@ -163,7 +154,9 @@ public class ServicioSocio implements IServicioSocio {
                     + ". Primero sacalo de alguna.");
         }
         socio.setPlan(plan);
-        repositorio.guardar(socio);                  // UPDATE de PLAN_ID
+        socio.setGrupoFamiliar(grupoFamiliar);
+        socio.setEmpleadoComercio(empleadoComercio);
+        repositorio.guardar(socio);                  // UPDATE de PLAN_ID y descuentos
     }
 
     @Override
