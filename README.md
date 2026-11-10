@@ -4,7 +4,7 @@ Aplicación web para administrar un gimnasio: socios, planes, actividades, cobro
 
 **Materia:** Programación II - IFES
 **Profesor:** Juan José Navarro
-**Integrantes:** Ibáñez, Matías
+**Integrantes:** Ibáñez Matías, Ferrero Kevin y Ijurco Francisco
 
 ## Tecnologías
 
