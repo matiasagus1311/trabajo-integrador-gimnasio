@@ -13,5 +13,7 @@ public class Aplicacion {
 
     public static void main(String[] args) {
         SpringApplication.run(Aplicacion.class, args);
+        // Cuando llega acá la página ya está andando
+        System.out.println("Página lista: http://localhost:8080");
     }
 }
