@@ -1,13 +1,9 @@
 package com.programacion2.configuracion;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -40,16 +36,13 @@ public class Configuracion implements WebMvcConfigurer {
 
     /**
      * La fábrica de PersistenceManager: se crea UNA sola vez con la unidad
-     * "Programacion2" del persistence.xml. La contraseña de la base llega
-     * desde application.properties (variable de entorno DB_PASSWORD).
+     * "Programacion2" del persistence.xml (ahí están la URL, el usuario
+     * y la contraseña de la base, como en clase).
      * Spring la cierra al apagar la aplicación (destroyMethod).
      */
     @Bean(destroyMethod = "close")
-    public PersistenceManagerFactory persistenceManagerFactory(
-            @Value("${gimnasio.db.password}") String password) {
-        Map<String, Object> propiedades = new HashMap<>();
-        propiedades.put("javax.jdo.option.ConnectionPassword", password);
-        return JDOHelper.getPersistenceManagerFactory(propiedades, "Programacion2");
+    public PersistenceManagerFactory persistenceManagerFactory() {
+        return JDOHelper.getPersistenceManagerFactory("Programacion2");
     }
 
     // Un repositorio por clase del dominio, todos con la misma fábrica

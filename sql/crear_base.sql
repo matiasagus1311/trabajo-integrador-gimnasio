@@ -1,6 +1,6 @@
 -- Ejecutar UNA vez en MySQL Workbench, conectado como root.
 -- Cambiá 'tu_clave' por la contraseña que quieras para el usuario de la aplicación
--- y usá esa misma en la variable de entorno DB_PASSWORD (ver README.md).
+-- y poné esa misma en ConnectionPassword del persistence.xml (ver README.md).
 
 -- Esquema (= base de datos)
 CREATE DATABASE IF NOT EXISTS gimnasio;

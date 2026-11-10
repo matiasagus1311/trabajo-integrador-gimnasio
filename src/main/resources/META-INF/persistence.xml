@@ -23,8 +23,10 @@
                       value="jdbc:mysql://localhost:3306/gimnasio?allowPublicKeyRetrieval=true&amp;useSSL=false"/>
             <property name="javax.jdo.option.ConnectionUserName"
                       value="gimnasio"/>
-            <!-- La contraseña NO se sube a GitHub: la pone Configuracion
-                 desde la variable de entorno DB_PASSWORD (ver README). -->
+            <!-- Poné TU contraseña del usuario gimnasio. Antes de subir a GitHub
+                 volvé a dejar tu_clave (como hace el profe). -->
+            <property name="javax.jdo.option.ConnectionPassword"
+                      value="tu_clave"/>
 
             <!-- Crea las tablas y columnas que falten al arrancar -->
             <property name="datanucleus.schema.autoCreateAll" value="true"/>

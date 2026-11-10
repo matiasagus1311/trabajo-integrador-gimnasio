@@ -55,12 +55,15 @@ com.programacion2
 
 1. Tener instalados JDK 17, Maven y MySQL.
 2. Abrir `sql/crear_base.sql`, cambiar `tu_clave` por una clave propia y ejecutarlo en MySQL Workbench. Crea la base `gimnasio` y su usuario. Las tablas las crea DataNucleus al arrancar.
-3. Definir la clave de la base en una variable de entorno (no se guarda en el repositorio):
-   - Windows (PowerShell): `$env:DB_PASSWORD="tu_clave"`
-   - Linux o Mac: `export DB_PASSWORD=tu_clave`
-4. En la carpeta del proyecto ejecutar:
+3. En `src/main/resources/META-INF/persistence.xml`, en `ConnectionPassword`, cambiar `tu_clave` por la misma clave del paso 2.
+4. En la carpeta del proyecto compilar (hace el enhance de DataNucleus) y correr la clase `Aplicacion` (Run arriba del `main` en VS Code):
    ```
-   mvn spring-boot:run
+   mvn clean process-classes
+   ```
+   También se puede armar el .jar y ejecutarlo:
+   ```
+   mvn package
+   java -jar target/gimnasio-1.0-SNAPSHOT.jar
    ```
 5. Entrar a http://localhost:8080
 
